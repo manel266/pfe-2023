@@ -3,12 +3,6 @@ pipeline {
 
     stages {
         stage('Build du projet') {
-            agent {
-                docker {
-                    image 'maven:3-alpine'
-                    args '-v $HOME/.m2:/root/.m2' // Mounting Maven local repository
-                }
-            }
             steps {
                 echo 'Building..'
                 sh 'mvn clean install'
