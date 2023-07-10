@@ -4,6 +4,8 @@ pipeline {
     stages {
         stage('Build du projet') {
             steps {
+                sh 'export PATH= $PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
+
                 echo 'Building..'
                 sh 'mvn clean install'
             }
