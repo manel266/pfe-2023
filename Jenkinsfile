@@ -3,13 +3,19 @@ pipeline {
 
     stages {
         stage('Build du projet') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
-                sh 'export PATH= $PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
-
                 echo 'Building..'
+                sh 'export PATH=$PATH:/path/to/maven/bin'
                 sh 'mvn clean install'
             }
         }
+
 
         stage('Login') {
             steps {
