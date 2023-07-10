@@ -1,0 +1,35 @@
+version: "3"
+services:
+
+  admin:
+    stdin_open: true
+    build:
+      context: ./admin/admin
+      dockerfile: Dockerfile
+    ports:
+      - 4000:4000
+    volumes:
+      -  /app/nodes_modules
+      -  ./admin:/app
+
+  client:
+    stdin_open: true
+    build:
+      context: ./client/client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - /app/nodes_modules
+      - ./client:app
+
+  server-master:
+     stdin_open: true
+     build:
+       context: ./server-master
+       dockerfile: Dockerfile
+     ports:
+       - 5000:5000
+     volumes:
+       - /app/nodes_modules
+       - ./server-master:app
