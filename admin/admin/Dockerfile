@@ -1,4 +1,4 @@
-# Utiliser l'image de base Node.js
+
 FROM node:14-alpine
 
 # Définir le répertoire de travail
@@ -16,7 +16,7 @@ COPY . .
 # Définir les variables d'environnement pour l'application
 
 ENV NODE_ENV=production
-EXPOSE 3000
+EXPOSE 4000
 
 # Démarrer l'application
-CMD ["npm", "start"]
+CMD ["npm", "start"
