@@ -3,15 +3,13 @@ pipeline {
 
 
     stages {
-
-        stage('Build du projet') {
-		 agent { docker 'maven:3-alpine' }
-            steps {
-
-                sh 'mvn clean install -DskipTests '
-				stash includes: 'target/*.jar', name: 'targetfiles'
-
+agent any
+  stages {
+    stage('Checkout Source') {
+      steps {
+        git 'https://github.com/manel266/pfe-2023/blob/main/Jenkinsfile.git'
+      }
+    }
             }
         }
     }
-}
