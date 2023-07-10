@@ -1,20 +1,16 @@
 pipeline {
-    agent any
+	agent any
+
 
     stages {
-        stage('Build') {
+
+        stage('Build du projet') {
+		 agent { docker 'maven:3-alpine' }
             steps {
-                echo 'Building..'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+
+                sh 'mvn clean install -DskipTests '
+				stash includes: 'target/*.jar', name: 'targetfiles'
+
             }
         }
     }
