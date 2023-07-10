@@ -2,34 +2,63 @@ pipeline {
     agent any
 
     stages {
-        stage('Build du projet') {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Backend') {
             agent {
                 docker {
-                    image 'maven:3-alpine'
-                    args '-v $HOME/.m2:/root/.m2'
+                    image 'node:14-alpine'
+                    args '-v $HOME/.npmrc:/root/.npmrc'
                 }
             }
             steps {
-                echo 'Building..'
-                sh 'export PATH=$PATH:/path/to/maven/bin'
-                sh 'mvn clean install'
+                dir('backend') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
 
-
-        stage('Login') {
+        stage('Build Frontend') {
+            agent {
+                docker {
+                    image 'node:14-alpine'
+                    args '-v $HOME/.npmrc:/root/.npmrc'
+                }
+            }
             steps {
-                sh 'docker login --username=4587612 --password=Sesame2022'
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
 
-        stage('Construction image') {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:14-alpine'
+                    args '-v $HOME/.npmrc:/root/.npmrc'
+                }
+            }
             steps {
-                script {
-                    unstash 'targetfiles'
-                    sh 'docker build . -t azure-back:test'
-                    sh 'docker tag azure-back:test 4587612/azure-back:test'
-                    sh 'docker push 4587612/azure-back:test'
+                dir('backend') {
+                    sh 'npm run test'
+                }
+                dir('frontend') {
+                    sh 'npm run test'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('backend') {
+                    sh 'npm run deploy'
                 }
             }
         }
